@@ -1,0 +1,373 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Result Calculator</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: #ffffff;
+            width: 100%;
+            max-width: 480px;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 26px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #777;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        label {
+            display: block;
+            margin: 15px 0 7px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 4px rgba(102, 126, 234, 0.4);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .calculate-btn {
+            background: #667eea;
+        }
+
+        .calculate-btn:hover {
+            background: #5367d5;
+        }
+
+        .reset-btn {
+            background: #6c757d;
+        }
+
+        .reset-btn:hover {
+            background: #555e66;
+        }
+
+        .result {
+            display: none;
+            margin-top: 25px;
+            padding: 20px;
+            background: #f7f8fc;
+            border-radius: 10px;
+            border: 1px solid #e3e6f0;
+        }
+
+        .result h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .result-row:last-of-type {
+            border-bottom: none;
+        }
+
+        .result-row span:first-child {
+            color: #555;
+        }
+
+        .result-row span:last-child {
+            font-weight: bold;
+            text-align: right;
+            overflow-wrap: anywhere;
+        }
+
+        .status {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .pass {
+            color: #137333;
+            background: #d9f7df;
+        }
+
+        .fail {
+            color: #b42318;
+            background: #fde2e0;
+        }
+
+        .error {
+            display: none;
+            margin-top: 15px;
+            color: #b42318;
+            background: #fde2e0;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 22px;
+            font-size: 12px;
+            color: #888;
+        }
+
+        @media (max-width: 400px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="container">
+        <h1>Student Result Calculator</h1>
+        <p class="subtitle">
+            Enter student details and marks to calculate the result.
+        </p>
+
+        <form id="resultForm">
+            <label for="studentName">Student Name</label>
+            <input
+                type="text"
+                id="studentName"
+                placeholder="Enter student name"
+                maxlength="100"
+                required
+            >
+
+            <label for="mark1">Subject 1 Marks</label>
+            <input
+                type="number"
+                id="mark1"
+                placeholder="Enter marks (0–100)"
+                min="0"
+                max="100"
+                step="1"
+                required
+            >
+
+            <label for="mark2">Subject 2 Marks</label>
+            <input
+                type="number"
+                id="mark2"
+                placeholder="Enter marks (0–100)"
+                min="0"
+                max="100"
+                step="1"
+                required
+            >
+
+            <label for="mark3">Subject 3 Marks</label>
+            <input
+                type="number"
+                id="mark3"
+                placeholder="Enter marks (0–100)"
+                min="0"
+                max="100"
+                step="1"
+                required
+            >
+
+            <div class="button-group">
+                <button type="submit" class="calculate-btn">
+                    Calculate Result
+                </button>
+                <button type="reset" class="reset-btn">
+                    Reset
+                </button>
+            </div>
+        </form>
+
+        <p id="errorMessage" class="error" role="alert"></p>
+
+        <section
+            id="result"
+            class="result"
+            aria-live="polite"
+            aria-labelledby="resultTitle"
+        >
+            <h2 id="resultTitle">Student Result</h2>
+
+            <div class="result-row">
+                <span>Name</span>
+                <span id="outputName"></span>
+            </div>
+
+            <div class="result-row">
+                <span>Subject 1</span>
+                <span id="outputMark1"></span>
+            </div>
+
+            <div class="result-row">
+                <span>Subject 2</span>
+                <span id="outputMark2"></span>
+            </div>
+
+            <div class="result-row">
+                <span>Subject 3</span>
+                <span id="outputMark3"></span>
+            </div>
+
+            <div class="result-row">
+                <span>Total Marks</span>
+                <span id="outputTotal"></span>
+            </div>
+
+            <div class="result-row">
+                <span>Average Marks</span>
+                <span id="outputAverage"></span>
+            </div>
+
+            <div id="outputStatus" class="status"></div>
+        </section>
+
+        <footer>
+            Student Result Calculator | HTML, CSS &amp; JavaScript
+        </footer>
+    </main>
+
+    <script>
+        const form = document.getElementById("resultForm");
+        const result = document.getElementById("result");
+        const errorMessage = document.getElementById("errorMessage");
+
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const studentName =
+                document.getElementById("studentName").value.trim();
+
+            const mark1 = Number(document.getElementById("mark1").value);
+            const mark2 = Number(document.getElementById("mark2").value);
+            const mark3 = Number(document.getElementById("mark3").value);
+
+            const marks = [mark1, mark2, mark3];
+
+            errorMessage.style.display = "none";
+            result.style.display = "none";
+
+            if (!studentName) {
+                showError("Please enter the student's name.");
+                return;
+            }
+
+            const inputs = ["mark1", "mark2", "mark3"];
+
+            for (const id of inputs) {
+                const input = document.getElementById(id);
+                const value = input.value;
+
+                if (
+                    value.trim() === "" ||
+                    !Number.isInteger(Number(value)) ||
+                    Number(value) < 0 ||
+                    Number(value) > 100
+                ) {
+                    showError(
+                        "Please enter a whole number between 0 and 100 for every subject."
+                    );
+                    input.focus();
+                    return;
+                }
+            }
+
+            const total = marks.reduce((sum, mark) => sum + mark, 0);
+            const average = total / marks.length;
+            const passed = average >= 50;
+
+            document.getElementById("outputName").textContent = studentName;
+            document.getElementById("outputMark1").textContent = mark1;
+            document.getElementById("outputMark2").textContent = mark2;
+            document.getElementById("outputMark3").textContent = mark3;
+            document.getElementById("outputTotal").textContent = total;
+            document.getElementById("outputAverage").textContent =
+                average.toFixed(2);
+
+            const status = document.getElementById("outputStatus");
+            status.textContent = passed ? "Result: PASS" : "Result: FAIL";
+            status.className = "status " + (passed ? "pass" : "fail");
+
+            result.style.display = "block";
+        });
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = "block";
+        }
+
+        form.addEventListener("reset", function () {
+            result.style.display = "none";
+            errorMessage.style.display = "none";
+        });
+    </script>
+</body>
+</html>
